@@ -25,12 +25,24 @@ public class GameService {
 	}
 
 	public void deleteGame(Long id){
+		Game foundGame = checkGameExistsOrThrow(id);
+		gameRepo.delete(foundGame);
+	}
+
+	public Game addDeckToGame(Long id) {
+		Game foundGame = checkGameExistsOrThrow(id);
+		foundGame.getGameDeck().addDeckToGameDeck();
+		gameRepo.save(foundGame);
+		return foundGame;
+	}
+
+	private Game checkGameExistsOrThrow(Long id){
 		Optional<Game> foundGame = gameRepo.findById(id);
 		if(!foundGame.isPresent()){
 			throw new GameNotFoundException(id);
 		}
 
-		gameRepo.delete(foundGame.get());
+		return foundGame.get();
 	}
 
 }

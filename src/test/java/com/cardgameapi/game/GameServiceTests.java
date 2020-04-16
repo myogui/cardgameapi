@@ -1,5 +1,6 @@
 package com.cardgameapi.game;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -47,6 +48,19 @@ public class GameServiceTests {
     }
 
     @Test
+    public void createGame_WhenCalled_CallsRepoSaveOnce(){
+        // arrange 
+        when(repoMock.save(any(Game.class))).thenReturn(new Game());
+        GameService service = new GameService(repoMock);
+
+        // act
+        service.createGame(new Game());
+
+        // assert
+        verify(repoMock, times(1)).save(any(Game.class));
+    }
+
+    @Test
     public void delete_WhenGameExists_CallsRepoDeleteOnce(){
         // arrange 
         doNothing().when(repoMock).delete(any(Game.class));
@@ -74,6 +88,34 @@ public class GameServiceTests {
 
         // assert
 		assertThrows(GameNotFoundException.class, () -> service.deleteGame(1L));
+    }
+
+    @Test
+    public void addDeckToGame_WhenGameExists_DeckAddedGameSaved(){
+        // arrange 
+        when(repoMock.save(any(Game.class))).thenReturn(new Game());
+        when(repoMock.findById(anyLong())).thenReturn(Optional.of(new Game()));
+        GameService service = new GameService(repoMock);
+
+        // act
+        Game updatedGame = service.addDeckToGame(1L);
+
+        // assert
+        verify(repoMock, times(1)).save(any(Game.class));
+        assertEquals(104, updatedGame.getGameDeck().dealCards(104).size());
+        assertEquals(0, updatedGame.getGameDeck().dealCards(1).size());
+    }
+
+    @Test
+    public void addDeckToGame_WhenGameDoesntExists_ThrowsGameNotFoundException(){
+        // arrange 
+        when(repoMock.findById(anyLong())).thenReturn(Optional.empty());
+        GameService service = new GameService(repoMock);
+
+        // act
+
+        // assert
+		assertThrows(GameNotFoundException.class, () -> service.addDeckToGame(1L));
     }
 
 }

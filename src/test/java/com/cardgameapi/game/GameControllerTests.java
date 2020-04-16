@@ -69,4 +69,17 @@ public class GameControllerTests {
         // assert
         verify(serviceMock, times(1)).deleteGame(anyLong());
     }
+
+    @Test
+    public void addDeck_WhenCalled_CallsServiceAddDeckOnce(){
+        // arrange 
+        when(serviceMock.addDeckToGame(anyLong())).thenReturn(new Game());
+        GameController controller = new GameController(serviceMock);
+
+        // act
+        controller.addDeckToGame(1L);
+
+        // assert
+        verify(serviceMock, times(1)).addDeckToGame(anyLong());
+    }
 }
