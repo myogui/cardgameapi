@@ -1,9 +1,13 @@
 package com.cardgameapi.game;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 import com.cardgameapi.cards.GameDeck;
 import com.cardgameapi.cards.StandardDeckFactory;
+import com.cardgameapi.player.PlayerWithCards;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
@@ -19,13 +23,15 @@ public class Game {
 	
 	@Id
 	private Long id;
-	private GameDeck gameDeck;
+	private final GameDeck gameDeck;
+	private final List<PlayerWithCards> players;
 
 	@PersistenceConstructor
 	public Game(){
 		this.id = COUNTER.incrementAndGet();
 		StandardDeckFactory deckFactory = new StandardDeckFactory();
 		this.gameDeck = deckFactory.getStandardGameDeck();
+		players = new ArrayList<PlayerWithCards>();
 	}
 
 	public Long getId() {
@@ -38,5 +44,31 @@ public class Game {
 
 	public GameDeck getGameDeck(){
 		return gameDeck;
+	}
+
+	public void addPlayerToGame(String name){
+		if(playerExists(name)){
+			throw new IllegalArgumentException();
+		}
+
+		players.add(new PlayerWithCards(name));
+	}
+
+	public void removePlayerFromGame(String name){
+		if(!playerExists(name)){
+			throw new IllegalArgumentException();
+		}
+
+		PlayerWithCards playerToRemove = 
+			players.stream().filter(o -> o.getName().equals(name)).findFirst().get();
+		players.remove(playerToRemove);
+	}
+
+	public List<String> getPlayersName(){
+		return players.stream().map(o -> o.getName()).collect(Collectors.toList());
+	}
+
+	private boolean playerExists(String name){
+		return players.stream().anyMatch(o -> o.getName().equals(name));
 	}
 }

@@ -5,6 +5,12 @@ import java.util.List;
 
 import com.cardgameapi.cards.Card;
 
+import org.springframework.data.gemfire.mapping.annotation.Region;
+
+import lombok.Data;
+
+@Data
+@Region("Player")
 public class PlayerWithCards extends Player {
 
     private final List<Card> hand;

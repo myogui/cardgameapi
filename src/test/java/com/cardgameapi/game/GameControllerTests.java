@@ -2,6 +2,7 @@ package com.cardgameapi.game;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -58,6 +59,19 @@ public class GameControllerTests {
     }
 
     @Test
+    public void addDeck_WhenCalled_CallsServiceAddDeckOnce(){
+        // arrange 
+        when(serviceMock.addDeckToGame(anyLong())).thenReturn(new Game());
+        GameController controller = new GameController(serviceMock);
+
+        // act
+        controller.addDeckToGame(1L);
+
+        // assert
+        verify(serviceMock, times(1)).addDeckToGame(anyLong());
+    }
+
+    @Test
     public void delete_WhenCalled_CallsServiceDeleteOnce(){
         // arrange 
         doNothing().when(serviceMock).deleteGame(anyLong());
@@ -71,15 +85,41 @@ public class GameControllerTests {
     }
 
     @Test
-    public void addDeck_WhenCalled_CallsServiceAddDeckOnce(){
+    public void addPlayerToGame_WhenCalled_CallsServiceAddPlayerOnce(){
         // arrange 
-        when(serviceMock.addDeckToGame(anyLong())).thenReturn(new Game());
+        when(serviceMock.addPlayerToGame(anyLong(), anyString())).thenReturn(new Game());
         GameController controller = new GameController(serviceMock);
 
         // act
-        controller.addDeckToGame(1L);
+        controller.addPlayerToGame(1L, "Bob Ross");
 
         // assert
-        verify(serviceMock, times(1)).addDeckToGame(anyLong());
+        verify(serviceMock, times(1)).addPlayerToGame(anyLong(), anyString());
+    }
+
+    @Test
+    public void removePlayerFromGame_WhenCalled_CallsServiceRemovePlayerOnce(){
+        // arrange 
+        when(serviceMock.removePlayerFromGame(anyLong(), anyString())).thenReturn(new Game());
+        GameController controller = new GameController(serviceMock);
+
+        // act
+        controller.removePlayerFromGame(1L, "Bob Ross");
+
+        // assert
+        verify(serviceMock, times(1)).removePlayerFromGame(anyLong(), anyString());
+    }
+
+    @Test
+    public void getPlayersName_WhenCalled_CallsServiceGetPlayersNameOnce(){
+        // arrange 
+        when(serviceMock.getPlayersName(anyLong())).thenReturn(new ArrayList<String>());
+        GameController controller = new GameController(serviceMock);
+
+        // act
+        controller.getPlayersName(1L);
+
+        // assert
+        verify(serviceMock, times(1)).getPlayersName(anyLong());
     }
 }

@@ -25,24 +25,53 @@ public class GameService {
 	}
 
 	public void deleteGame(Long id){
-		Game foundGame = checkGameExistsOrThrow(id);
+		Game foundGame = findExistingGameOrThrow(id);
 		gameRepo.delete(foundGame);
 	}
 
 	public Game addDeckToGame(Long id) {
-		Game foundGame = checkGameExistsOrThrow(id);
+		Game foundGame = findExistingGameOrThrow(id);
 		foundGame.getGameDeck().addDeckToGameDeck();
 		gameRepo.save(foundGame);
 		return foundGame;
 	}
 
-	private Game checkGameExistsOrThrow(Long id){
+	public Game addPlayerToGame(Long id, String playerName){
+		Game foundGame = findExistingGameOrThrow(id);
+		validatePlayerNameOrThrow(playerName);
+
+		foundGame.addPlayerToGame(playerName);
+		gameRepo.save(foundGame);
+		return foundGame;
+	}
+
+	public Game removePlayerFromGame(Long id, String playerName) {
+		Game foundGame = findExistingGameOrThrow(id);
+		validatePlayerNameOrThrow(playerName);
+
+		foundGame.removePlayerFromGame(playerName);
+		gameRepo.save(foundGame);
+		return foundGame;
+	}
+
+	public List<String> getPlayersName(Long id) {
+		Game foundGame = findExistingGameOrThrow(id);
+		return foundGame.getPlayersName();
+	}
+
+	private Game findExistingGameOrThrow(Long id){
 		Optional<Game> foundGame = gameRepo.findById(id);
 		if(!foundGame.isPresent()){
 			throw new GameNotFoundException(id);
 		}
 
 		return foundGame.get();
+	}
+
+	private void validatePlayerNameOrThrow(String playerName) {
+		if("".equals(playerName)){
+			throw new IllegalArgumentException();
+		}
 	}
 
 }
