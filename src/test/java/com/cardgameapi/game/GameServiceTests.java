@@ -11,7 +11,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,39 +25,13 @@ public class GameServiceTests {
     String expectedPlayerName = "Bob Ross";
 
     @Test
-    public void getAll_WhenCalled_CallsRepoFindAllOnce(){
-        // arrange 
-        when(repoMock.findAll()).thenReturn(new ArrayList<Game>());
-        GameService service = new GameService(repoMock);
-
-        // act
-        service.getAll();
-
-        // assert
-        verify(repoMock, times(1)).findAll();
-    }
-
-    @Test
-    public void getOne_WhenCalled_CallsRepoFindByIdOnce(){
-        // arrange 
-        when(repoMock.findById(anyLong())).thenReturn(Optional.of(new Game()));
-        GameService service = new GameService(repoMock);
-
-        // act
-        service.getOne(1L);
-
-        // assert
-        verify(repoMock, times(1)).findById(anyLong());
-    }
-
-    @Test
     public void createGame_WhenCalled_CallsRepoSaveOnce(){
         // arrange 
         when(repoMock.save(any(Game.class))).thenReturn(new Game());
         GameService service = new GameService(repoMock);
 
         // act
-        service.createGame(new Game());
+        service.createGame();
 
         // assert
         verify(repoMock, times(1)).save(any(Game.class));
@@ -137,7 +110,7 @@ public class GameServiceTests {
     }
 
     @Test
-    public void addPlayer_WhenPlayerExists_ThrowsIllegalArgumentException()
+    public void addPlayer_WhenPlayerExists_ThrowsInvalidArgumentException()
     {
         // arrange 
         Game fixture = new Game();
@@ -148,11 +121,11 @@ public class GameServiceTests {
         // act
 
         // assert
-        assertThrows(IllegalArgumentException.class, () -> service.addPlayerToGame(fixture.getId(), expectedPlayerName));
+        assertThrows(InvalidArgumentException.class, () -> service.addPlayerToGame(fixture.getId(), expectedPlayerName));
     }
 
     @Test
-    public void addPlayer_WhenInvalidPlayerName_ThrowsIllegalArgumentException()
+    public void addPlayer_WhenInvalidPlayerName_ThrowsInvalidArgumentException()
     {
         // arrange 
         when(repoMock.save(any(Game.class))).thenReturn(new Game());
@@ -162,7 +135,7 @@ public class GameServiceTests {
         // act
 
         // assert
-        assertThrows(IllegalArgumentException.class, () -> service.addPlayerToGame(1L, ""));
+        assertThrows(InvalidArgumentException.class, () -> service.addPlayerToGame(1L, ""));
     }
 
     @Test

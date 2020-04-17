@@ -48,7 +48,7 @@ public class Game {
 
 	public void addPlayerToGame(String name){
 		if(playerExists(name)){
-			throw new IllegalArgumentException();
+			throw new InvalidArgumentException("name");
 		}
 
 		players.add(new PlayerWithCards(name));
@@ -56,7 +56,7 @@ public class Game {
 
 	public void removePlayerFromGame(String name){
 		if(!playerExists(name)){
-			throw new IllegalArgumentException();
+			throw new InvalidArgumentException("name");
 		}
 
 		PlayerWithCards playerToRemove = 

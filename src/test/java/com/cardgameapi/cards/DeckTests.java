@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
+import com.cardgameapi.game.InvalidArgumentException;
+
 import org.junit.jupiter.api.Test;
 
 public class DeckTests {
@@ -25,7 +27,7 @@ public class DeckTests {
     }
 
     @Test
-    public void dealCards_NegativeNumberCards_ThrowsIllegalArgumentException(){
+    public void dealCards_NegativeNumberCards_ThrowsInvalidArgumentException(){
         // arrange
         Byte invalidNumberOfCards = 0;
         Deck deck = standardDeckFactory.getStandardDeck();        
@@ -33,7 +35,7 @@ public class DeckTests {
         // act
         
         // assert
-        assertThrows(IllegalArgumentException.class, () -> deck.dealCards(invalidNumberOfCards));
+        assertThrows(InvalidArgumentException.class, () -> deck.dealCards(invalidNumberOfCards));
     }
 
     @Test

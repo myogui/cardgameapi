@@ -1,6 +1,6 @@
 package com.cardgameapi.game;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
@@ -20,42 +20,18 @@ public class GameControllerTests {
     GameService serviceMock = Mockito.mock(GameService.class);
 
     @Test
-    public void getAll_WhenCalled_CallsServiceGetAllOnce(){
+    public void createGame_WhenCalled_CallsServiceCreateGameOnceReturnsId(){
         // arrange 
-        when(serviceMock.getAll()).thenReturn(new ArrayList<Game>());
+        Game fixture = new Game();
+        when(serviceMock.createGame()).thenReturn(fixture);
         GameController controller = new GameController(serviceMock);
 
         // act
-        controller.getAll();
+        Long actual = controller.createGame();
 
         // assert
-        verify(serviceMock, times(1)).getAll();
-    }
-
-    @Test
-    public void createGame_WhenCalled_CallsServiceCreateGameOnce(){
-        // arrange 
-        when(serviceMock.createGame(any(Game.class))).thenReturn(new Game());
-        GameController controller = new GameController(serviceMock);
-
-        // act
-        controller.createGame(new Game());
-
-        // assert
-        verify(serviceMock, times(1)).createGame(any(Game.class));
-    }
-
-    @Test
-    public void getOne_WhenCalled_CallsServiceGetOneOnce(){
-        // arrange 
-        when(serviceMock.getOne(anyLong())).thenReturn(new Game());
-        GameController controller = new GameController(serviceMock);
-
-        // act
-        controller.getOne(1L);
-
-        // assert
-        verify(serviceMock, times(1)).getOne(anyLong());
+        verify(serviceMock, times(1)).createGame();
+        assertEquals(fixture.getId(), actual);
     }
 
     @Test

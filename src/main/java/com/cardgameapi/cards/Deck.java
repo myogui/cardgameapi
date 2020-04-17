@@ -3,6 +3,8 @@ package com.cardgameapi.cards;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.cardgameapi.game.InvalidArgumentException;
+
 import org.springframework.data.gemfire.mapping.annotation.Region;
 
 import lombok.Data;
@@ -19,7 +21,7 @@ public class Deck {
 
 	public synchronized List<Card> dealCards(int nbOfCards){
         if(nbOfCards <= 0){
-            throw new IllegalArgumentException("The number of cards to be dealt must be greater than 1.");
+            throw new InvalidArgumentException("nbOfCards");
         }
 
         List<Card> dealtCards = new ArrayList<Card>();

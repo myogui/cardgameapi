@@ -10,18 +10,9 @@ public class GameService {
     public GameService(GameRepo gameRepo){        
 		this.gameRepo = gameRepo;
     }
-
-	public List<Game> getAll() {
-	  return (List<Game>) gameRepo.findAll();
-	}
-
-	public Game getOne(Long id) {
-		return gameRepo.findById(id)
-		  .orElseThrow(() -> new GameNotFoundException(id));
-	}
   
-	public Game createGame(Game newGame) {
-	  return gameRepo.save(newGame);
+	public Game createGame() {
+	  return gameRepo.save(new Game());
 	}
 
 	public void deleteGame(Long id){
@@ -34,6 +25,11 @@ public class GameService {
 		foundGame.getGameDeck().addDeckToGameDeck();
 		gameRepo.save(foundGame);
 		return foundGame;
+	}
+
+	public List<String> getPlayersName(Long id) {
+		Game foundGame = findExistingGameOrThrow(id);
+		return foundGame.getPlayersName();
 	}
 
 	public Game addPlayerToGame(Long id, String playerName){
@@ -54,11 +50,6 @@ public class GameService {
 		return foundGame;
 	}
 
-	public List<String> getPlayersName(Long id) {
-		Game foundGame = findExistingGameOrThrow(id);
-		return foundGame.getPlayersName();
-	}
-
 	private Game findExistingGameOrThrow(Long id){
 		Optional<Game> foundGame = gameRepo.findById(id);
 		if(!foundGame.isPresent()){
@@ -70,7 +61,7 @@ public class GameService {
 
 	private void validatePlayerNameOrThrow(String playerName) {
 		if("".equals(playerName)){
-			throw new IllegalArgumentException();
+			throw new InvalidArgumentException("name");
 		}
 	}
 

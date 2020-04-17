@@ -1,5 +1,7 @@
 package com.cardgameapi.cards;
 
+import com.cardgameapi.game.InvalidArgumentException;
+
 public class Card {
 
     private final Suit suit;
@@ -7,7 +9,7 @@ public class Card {
 
     public Card(Suit suit, Byte value){
         if(value < 1 || value > 13){
-            throw new IllegalArgumentException("Value must be between 1 and 13.");
+            throw new InvalidArgumentException("value");
         }
 
         this.suit = suit;

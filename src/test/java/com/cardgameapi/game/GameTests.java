@@ -42,7 +42,7 @@ public class GameTests {
 
         game.addPlayerToGame(expectedPlayerName);
         
-        assertThrows(IllegalArgumentException.class, () -> game.addPlayerToGame(expectedPlayerName));
+        assertThrows(InvalidArgumentException.class, () -> game.addPlayerToGame(expectedPlayerName));
     }
 
     @Test

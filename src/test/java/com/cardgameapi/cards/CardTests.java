@@ -3,6 +3,8 @@ package com.cardgameapi.cards;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.cardgameapi.game.InvalidArgumentException;
+
 import org.junit.jupiter.api.Test;
 
 public class CardTests {
@@ -22,7 +24,7 @@ public class CardTests {
     }
 
     @Test
-    public void Card_InvalidValue_ThrowIllegalArgumentException(){
+    public void Card_InvalidValue_ThrowInvalidArgumentException(){
         // arrange
         Suit expectedSuit = Suit.CLUBS;
         Byte underLimitValue = 0;
@@ -31,7 +33,7 @@ public class CardTests {
         // act
 
         // assert
-        assertThrows(IllegalArgumentException.class, () -> new Card(expectedSuit, underLimitValue));
-        assertThrows(IllegalArgumentException.class, () -> new Card(expectedSuit, overtLimitValue));
+        assertThrows(InvalidArgumentException.class, () -> new Card(expectedSuit, underLimitValue));
+        assertThrows(InvalidArgumentException.class, () -> new Card(expectedSuit, overtLimitValue));
     }
 }
